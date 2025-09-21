@@ -387,7 +387,7 @@ header ul li a {
   padding-top: 80px;
   padding-bottom: 80px;
   position: relative;
-  background-image: url(src/assets/stats.jpg);
+  background-image: url("/stats.jpg");
   min-height: 100vh;
   background-size: cover;
 }

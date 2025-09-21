@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import landingImg from "../assets/landing2.png";
+
+
 
 function Landing() {
   return (
@@ -21,7 +24,7 @@ function Landing() {
           </div>
         </div>
         <img
-          src="src/assets/landing2.png"
+          src={landingImg}
           className="img-fluid"
           alt="landing image"
         />

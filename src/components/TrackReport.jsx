@@ -36,16 +36,17 @@ function TrackReport() {
           setReport(data);
 
           const steps = [
-            "received",
-            "under_review",
-            "in_progress",
-            "resolved",
-            "closed",
+           "تم استلام البلاغ",
+           "قيد المراجعة",
+           "قيد المعالجة",
+           "تم الحل",
+           "تم الإغلاق",
           ];
           const activeIndex = steps.indexOf(data.case_status);
 
           const timelineData = steps.map((step, index) => ({
             key: step,
+            
             label: statusMap[step],
             message: stepMessages[step],
             active: index <= activeIndex,

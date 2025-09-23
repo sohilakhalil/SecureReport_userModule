@@ -46,7 +46,6 @@ function TrackReport() {
 
           const timelineData = steps.map((step, index) => ({
             key: step,
-            
             label: statusMap[step],
             message: stepMessages[step],
             active: index <= activeIndex,

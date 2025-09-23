@@ -3,9 +3,9 @@ function Footer() {
     <footer className="site-footer">
       <div className="container text-center">
         <p className="footer-desc">
-          جميع الحقوق محفوظة &copy; 2025 |{" "}
-          <span style={{ color: "#4ec1f1" }}>SacuireReport</span> يضمن سرية
-          بياناتك وأمان البلاغات
+          جميع الحقوق محفوظة © 2025 | &lt;Developed by="
+          <span style={{ color: "#4ec1f1" }}>العصفورة قالتلي</span>"
+          andPowered=true /&gt;
         </p>
       </div>
     </footer>

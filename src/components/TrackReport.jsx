@@ -40,7 +40,7 @@ function TrackReport() {
 
           const timelineData = steps.map((step, index) => ({
             key: step,
-            label: step, // مباشرة من غير mapping
+            label: step, 
             message: stepMessages[step],
             active: index <= activeIndex,
           }));

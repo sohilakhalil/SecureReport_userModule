@@ -4,6 +4,22 @@ function TrackReport() {
   const [report, setReport] = useState(null);
   const [timeline, setTimeline] = useState([]);
 
+  const statusMap = {
+    "تم استلام البلاغ": "تم استلام البلاغ",
+   "قيد المراجعة": "قيد المراجعة",
+    "قيد المعالجة": "قيد المعالجة",
+    "تم الحل": "تم الحل",
+    "تم الإغلاق": "تم الإغلاق",
+  };
+
+  const stepMessages = {
+    "تم استلام البلاغ": "تم تسجيل البلاغ لدينا",
+    "قيد المراجعة": "البلاغ تحت التدقيق الآن",
+    "قيد المعالجة": "الفريق يعمل على معالجة البلاغ",
+    "تم الحل": "تم حل المشكلة بنجاح",
+    "تم الإغلاق": "تم إغلاق البلاغ",
+  };
+
   useEffect(() => {
     const form = document.querySelector(".track-report form");
 
@@ -13,28 +29,25 @@ function TrackReport() {
       const trackingId = document.querySelector("#tracking").value;
 
       try {
-        const res = await fetch(
-          `https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`
-        );
+        const res = await fetch(`https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`);
         const data = await res.json();
 
         if (res.ok) {
           setReport(data);
 
           const steps = [
-            { key: "تم استلام البلاغ", message: "تم تسجيل البلاغ لدينا" },
-            { key: "قيد المراجعة", message: "البلاغ تحت التدقيق الآن" },
-            { key: "قيد المعالجة", message: "الفريق يعمل على معالجة البلاغ" },
-            { key: "تم الحل", message: "تم حل المشكلة بنجاح" },
-            { key: "تم الإغلاق", message: "تم إغلاق البلاغ" },
+           "تم استلام البلاغ",
+           "قيد المراجعة",
+           "قيد المعالجة",
+           "تم الحل",
+           "تم الإغلاق",
           ];
-
-          const activeIndex = steps.findIndex(
-            (step) => step.key === data.case_status
-          );
+          const activeIndex = steps.indexOf(data.case_status);
 
           const timelineData = steps.map((step, index) => ({
-            ...step,
+            key: step,
+            label: statusMap[step],
+            message: stepMessages[step],
             active: index <= activeIndex,
           }));
 
@@ -52,6 +65,7 @@ function TrackReport() {
     };
   }, []);
 
+  // دالة لتنسيق التاريخ بالعربي
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("ar-EG", options);
@@ -116,19 +130,19 @@ function TrackReport() {
                 {timeline.map((step) => (
                   <li key={step.key} className={step.active ? "active" : ""}>
                     <div className="icon">
-                      {step.key === "received" && (
+                      {step.key === "تم استلام البلاغ" && (
                         <i className="fa-solid fa-envelope-open"></i>
                       )}
-                      {step.key === "under_review" && (
+                      {step.key === "قيد المراجعة" && (
                         <i className="fa-solid fa-search"></i>
                       )}
-                      {step.key === "in_progress" && (
+                      {step.key === "قيد المعالجة" && (
                         <i className="fa-solid fa-cogs"></i>
                       )}
-                      {step.key === "resolved" && (
+                      {step.key === "تم الحل" && (
                         <i className="fa-solid fa-check-circle"></i>
                       )}
-                      {step.key === "closed" && (
+                      {step.key === "تم الإغلاق" && (
                         <i className="fa-solid fa-folder-closed"></i>
                       )}
                     </div>

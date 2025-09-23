@@ -4,14 +4,6 @@ function TrackReport() {
   const [report, setReport] = useState(null);
   const [timeline, setTimeline] = useState([]);
 
-  const statusMap = {
-    "تم استلام البلاغ": "تم استلام البلاغ",
-   "قيد المراجعة": "قيد المراجعة",
-    "قيد المعالجة": "قيد المعالجة",
-    "تم الحل": "تم الحل",
-    "تم الإغلاق": "تم الإغلاق",
-  };
-
   const stepMessages = {
     "تم استلام البلاغ": "تم تسجيل البلاغ لدينا",
     "قيد المراجعة": "البلاغ تحت التدقيق الآن",
@@ -29,24 +21,26 @@ function TrackReport() {
       const trackingId = document.querySelector("#tracking").value;
 
       try {
-        const res = await fetch(`https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`);
+        const res = await fetch(
+          `https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`
+        );
         const data = await res.json();
 
         if (res.ok) {
           setReport(data);
 
           const steps = [
-           "تم استلام البلاغ",
-           "قيد المراجعة",
-           "قيد المعالجة",
-           "تم الحل",
-           "تم الإغلاق",
+            "تم استلام البلاغ",
+            "قيد المراجعة",
+            "قيد المعالجة",
+            "تم الحل",
+            "تم الإغلاق",
           ];
           const activeIndex = steps.indexOf(data.case_status);
 
           const timelineData = steps.map((step, index) => ({
             key: step,
-            label: statusMap[step],
+            label: step, // مباشرة من غير mapping
             message: stepMessages[step],
             active: index <= activeIndex,
           }));
@@ -119,8 +113,7 @@ function TrackReport() {
                     <strong>نوع البلاغ:</strong> {report.report_type}
                   </div>
                   <div>
-                    <strong>الحالة الحالية:</strong>{" "}
-                    {statusMap[report.case_status] || report.case_status}
+                    <strong>الحالة الحالية:</strong> {report.case_status}
                   </div>
                 </div>
               </div>

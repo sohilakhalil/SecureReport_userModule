@@ -387,7 +387,7 @@ header ul li a {
   padding-top: 80px;
   padding-bottom: 80px;
   position: relative;
-  background-image: url("src/assets/stats.jpg");
+  background-image: url("/stats.jpg") !important;
   min-height: 100vh;
   background-size: cover;
 }
@@ -1046,7 +1046,7 @@ main {
   z-index: 1;
 }
 .timeline li.active::before {
-  border-inline-start: 3px solid var(--secondry-color) !important;
+  border-inline-start: 3px solid var(--secondry-color);
 }
 .timeline li .icon {
   width: 40px;
@@ -1138,50 +1138,12 @@ main {
   .timeline li:not(:first-child)::before {
     content: "";
     position: absolute;
-    top: -55px;
+    top: -52px;
     inset-inline-start: -8px;
     transform: translateX(-50%);
     width: 3px;
     height: calc(100% - 0px);
     border-inline-start: 3px dotted var(--secondry-color);
-    z-index: 1;
-  }
-}
-@media (max-width: 322px) {
-  .timeline li .icon {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    margin-left: 20px;
-    margin-right: -20px;
-  }
-  .timeline li .icon i {
-    font-size: 12px;
-  }
-  .timeline li .desc {
-    min-width: 160px;
-    margin-left: 10px;
-    padding: 10px 14px;
-  }
-
-  .timeline li .desc p {
-    font-size: 12px;
-  }
-  .timeline li .desc span {
-    font-size: 10px;
-  }
-  .timeline li .desc small {
-    font-size: 8px;
-  }
-  .timeline li:not(:first-child)::before {
-    content: "";
-    position: absolute;
-    top: -60px;
-    inset-inline-start: -12px;
-    transform: translateX(-50%);
-    width: 3px;
-    height: calc(114% - 0px);
-    border-inline-start: 2px dotted var(--secondry-color);
     z-index: 1;
   }
 }

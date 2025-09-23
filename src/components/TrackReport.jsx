@@ -29,7 +29,7 @@ function TrackReport() {
       const trackingId = document.querySelector("#tracking").value;
 
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/reports/track/${trackingId}/`);
+        const res = await fetch(`https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`);
         const data = await res.json();
 
         if (res.ok) {

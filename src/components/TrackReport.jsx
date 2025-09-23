@@ -4,22 +4,6 @@ function TrackReport() {
   const [report, setReport] = useState(null);
   const [timeline, setTimeline] = useState([]);
 
-  const statusMap = {
-    received: "تم استلام البلاغ",
-    under_review: "قيد المراجعة",
-    in_progress: "قيد المعالجة",
-    resolved: "تم الحل",
-    closed: "تم الإغلاق",
-  };
-
-  const stepMessages = {
-    received: "تم تسجيل البلاغ لدينا",
-    under_review: "البلاغ تحت التدقيق الآن",
-    in_progress: "الفريق يعمل على معالجة البلاغ",
-    resolved: "تم حل المشكلة بنجاح",
-    closed: "تم إغلاق البلاغ",
-  };
-
   useEffect(() => {
     const form = document.querySelector(".track-report form");
 
@@ -29,25 +13,28 @@ function TrackReport() {
       const trackingId = document.querySelector("#tracking").value;
 
       try {
-        const res = await fetch(`https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`);
+        const res = await fetch(
+          `https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`
+        );
         const data = await res.json();
 
         if (res.ok) {
           setReport(data);
 
           const steps = [
-           "تم استلام البلاغ",
-           "قيد المراجعة",
-           "قيد المعالجة",
-           "تم الحل",
-           "تم الإغلاق",
+            { key: "تم استلام البلاغ", message: "تم تسجيل البلاغ لدينا" },
+            { key: "قيد المراجعة", message: "البلاغ تحت التدقيق الآن" },
+            { key: "قيد المعالجة", message: "الفريق يعمل على معالجة البلاغ" },
+            { key: "تم الحل", message: "تم حل المشكلة بنجاح" },
+            { key: "تم الإغلاق", message: "تم إغلاق البلاغ" },
           ];
-          const activeIndex = steps.indexOf(data.case_status);
+
+          const activeIndex = steps.findIndex(
+            (step) => step.key === data.case_status
+          );
 
           const timelineData = steps.map((step, index) => ({
-            key: step,
-            label: statusMap[step],
-            message: stepMessages[step],
+            ...step,
             active: index <= activeIndex,
           }));
 
@@ -65,7 +52,6 @@ function TrackReport() {
     };
   }, []);
 
-  // دالة لتنسيق التاريخ بالعربي
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("ar-EG", options);

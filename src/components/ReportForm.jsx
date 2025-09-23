@@ -235,7 +235,7 @@ function ReportForm() {
         );
       }
 
-      fetch("http://127.0.0.1:8000/api/reports/new/", {
+      fetch("https://salmakhalil.pythonanywhere.com/api/reports/new/", {
         method: "POST",
         body: formData,
       })

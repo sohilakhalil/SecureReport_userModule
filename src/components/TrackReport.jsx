@@ -4,6 +4,14 @@ function TrackReport() {
   const [report, setReport] = useState(null);
   const [timeline, setTimeline] = useState([]);
 
+  const statusMap = {
+    "تم استلام البلاغ": "تم استلام البلاغ",
+    "قيد المراجعة": "قيد المراجعة",
+    "قيد المعالجة": "قيد المعالجة",
+    "تم الحل": "تم الحل",
+    "تم الإغلاق": "تم الإغلاق",
+  };
+
   const stepMessages = {
     "تم استلام البلاغ": "تم تسجيل البلاغ لدينا",
     "قيد المراجعة": "البلاغ تحت التدقيق الآن",
@@ -22,28 +30,51 @@ function TrackReport() {
 
       try {
         const res = await fetch(
-          `https://salmakhalil.pythonanywhere.com/api/reports/track/${trackingId}/`
+          `http://127.0.0.1:8000/api/reports/track/${trackingId}/`
         );
         const data = await res.json();
 
         if (res.ok) {
           setReport(data);
 
-          const steps = [
-            "تم استلام البلاغ",
-            "قيد المراجعة",
-            "قيد المعالجة",
-            "تم الحل",
-            "تم الإغلاق",
-          ];
-          const activeIndex = steps.indexOf(data.case_status);
-
-          const timelineData = steps.map((step, index) => ({
-            key: step,
-            label: step, 
-            message: stepMessages[step],
-            active: index <= activeIndex,
-          }));
+          let timelineData = [];
+          if (data.status === "تم الإغلاق") {
+            timelineData = [
+              {
+                key: "تم استلام البلاغ",
+                label: statusMap["تم استلام البلاغ"],
+                message: stepMessages["تم استلام البلاغ"],
+                active: true,
+              },
+              {
+                key: "قيد المراجعة",
+                label: statusMap["قيد المراجعة"],
+                message: stepMessages["قيد المراجعة"],
+                active: true,
+              },
+              {
+                key: "تم الإغلاق",
+                label: statusMap["تم الإغلاق"],
+                message: "🚫 البلاغ تم إغلاقه: الأدلة غير كافية",
+                active: true,
+                isCancelled: true,
+              },
+            ];
+          } else {
+            const steps = [
+              "تم استلام البلاغ",
+              "قيد المراجعة",
+              "قيد المعالجة",
+              "تم الحل",
+            ];
+            const activeIndex = steps.indexOf(data.status);
+            timelineData = steps.map((step, index) => ({
+              key: step,
+              label: statusMap[step],
+              message: stepMessages[step],
+              active: index <= activeIndex,
+            }));
+          }
 
           setTimeline(timelineData);
 
@@ -59,7 +90,6 @@ function TrackReport() {
     };
   }, []);
 
-  // دالة لتنسيق التاريخ بالعربي
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("ar-EG", options);
@@ -68,7 +98,6 @@ function TrackReport() {
   return (
     <main>
       <div className="tracking mt-3">
-        {/* شاشة إدخال ID */}
         <div className="container track-report active">
           <h1 className="report-title">تابع بلاغك خطوة بخطوة</h1>
           <p className="report-subtitle text-black-50 ms-3 me-3">
@@ -95,7 +124,6 @@ function TrackReport() {
           </div>
         </div>
 
-        {/* تفاصيل البلاغ + Timeline */}
         <div className="report-timeline">
           {report && (
             <>
@@ -113,7 +141,8 @@ function TrackReport() {
                     <strong>نوع البلاغ:</strong> {report.report_type}
                   </div>
                   <div>
-                    <strong>الحالة الحالية:</strong> {report.case_status}
+                    <strong>الحالة الحالية:</strong>{" "}
+                    {statusMap[report.status] || report.status}
                   </div>
                 </div>
               </div>
@@ -121,7 +150,12 @@ function TrackReport() {
               <h3>تتبع حالة البلاغ</h3>
               <ul className="timeline">
                 {timeline.map((step) => (
-                  <li key={step.key} className={step.active ? "active" : ""}>
+                  <li
+                    key={step.key}
+                    className={`${step.active ? "active" : ""} ${
+                      step.isCancelled ? "cancelled" : ""
+                    }`}
+                  >
                     <div className="icon">
                       {step.key === "تم استلام البلاغ" && (
                         <i className="fa-solid fa-envelope-open"></i>
@@ -136,14 +170,16 @@ function TrackReport() {
                         <i className="fa-solid fa-check-circle"></i>
                       )}
                       {step.key === "تم الإغلاق" && (
-                        <i className="fa-solid fa-folder-closed"></i>
+                        <i className="fa-solid fa-times-circle"></i>
                       )}
                     </div>
                     <div className="desc">
-                      <p>{step.label}</p>
-                      <span>
-                        {step.active ? step.message : "لم يتم الوصول إليها بعد"}
-                      </span>
+                      <p
+                        style={{ color: step.isCancelled ? "red" : "black" }}
+                      >
+                        {step.label}
+                      </p>
+                      <span>{step.message}</span>
                     </div>
                   </li>
                 ))}

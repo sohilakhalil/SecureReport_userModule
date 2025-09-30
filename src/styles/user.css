@@ -1038,11 +1038,11 @@ main {
   content: "";
   position: absolute;
   top: -47px;
-  left: 16px;
+  inset-inline-start: 16px;
   transform: translate(-50%);
   width: 3px;
   height: calc(100% - 8px);
-  border-left: 3px dotted var(--secondry-color);
+  border-inline-start: 3px dotted var(--secondry-color);
   z-index: 1;
 }
 .timeline li.active::before {
